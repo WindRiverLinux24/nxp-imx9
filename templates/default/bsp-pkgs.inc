@@ -1,0 +1,11 @@
+IMAGE_INSTALL += "i2c-tools"
+IMAGE_INSTALL += "can-utils"
+IMAGE_INSTALL += "pm-utils"
+IMAGE_INSTALL += "alsa-utils"
+IMAGE_INSTALL += "mtdev"
+IMAGE_INSTALL += "linux-firmware-imx-sdma-imx7d"
+IMAGE_INSTALL += "ptpd"
+IMAGE_INSTALL += "optee-client optee-os optee-test"
+IMAGE_INSTALL += "kernel-module-isp-vvcam"
+IMAGE_INSTALL += "openssl-engines"
+require conf/make_nxp_imx9_wic.inc

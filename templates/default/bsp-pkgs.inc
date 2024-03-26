@@ -8,4 +8,5 @@ IMAGE_INSTALL += "ptpd"
 IMAGE_INSTALL += "optee-client optee-os optee-test"
 IMAGE_INSTALL += "kernel-module-isp-vvcam"
 IMAGE_INSTALL += "openssl-engines"
+IMAGE_INSTALL += "iproute2-tc"
 require conf/make_nxp_imx9_wic.inc

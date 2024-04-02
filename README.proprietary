@@ -47,3 +47,65 @@ CUSTOMER_RECIPES:fsl-bsp-release += 'wayland-protocols'
 CUSTOMER_RECIPES:fsl-bsp-release += 'libdrm'
 
 <2> startup we will find that weston starts under g2d acceleration
+
+2.2 NPU & M33
+-------------
+
+<1> echo the following content to local.conf:
+
+Since some use cases also rely on graphics, this part is based on the 2.1
+graphics acceleration part.
+
+CUSTOMER_RECIPES:meta-ml += 'ethos-u-firmware'
+CUSTOMER_RECIPES:meta-ml += 'ethos-u-driver-stack'
+CUSTOMER_RECIPES:meta-ml += 'ethos-u-vela'
+CUSTOMER_RECIPES:meta-ml += 'eiq-examples'
+CUSTOMER_RECIPES:meta-ml += 'modelrunner'
+CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite'
+CUSTOMER_RECIPES:meta-ml += 'tensorflow-protobuf'
+CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite-host-tools-native'
+CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite-ethosu-delegate'
+CUSTOMER_RECIPES:meta-ml += 'flatbuffers'
+PREFERRED_VERSION_flatbuffers:mx93-nxp-bsp = "2.0.7"
+
+IMAGE_INSTALL:append = " ethos-u-firmware ethos-u-driver-stack ethos-u-vela eiq-examples tensorflow-lite-ethosu-delegate python3-setuptools"
+
+<2> startup & run following cmd:
+
+cd /usr/bin/eiq-examples-git/image_classification
+mkdir -p ../models/
+cp /usr/bin/tensorflow-lite-2.10.0/examples/mobilenet_v1_1.0_224_quant.tflite ../models/
+
+root@nxp-imx9:/usr/bin/eiq-examples-git/image_classification# python3 label_image.py -d /usr/lib64/libethosu_delegate.so -i grace_hopper.bmp -l labels.txt
+INFO: Ethosu delegate: device_name set to /dev/ethosu0.
+INFO: Ethosu remoteproc remoteproc0: powering up imx-rproc
+delegate: cache_file_path set to .
+INFO: Ethosu delegate: timeout set to 60000000000.
+INFO: Ethosu delegate: enable_cycle_countremoteproc remoteproc0: Booting fw image ethosu_firmware, size 242648
+er set to 0.
+INFO: Ethosu delegate: enable_profiling set to 0.
+INFO: Ethosu delmxc-md 42800000.bus:camera: deferring cap_device registration
+egate: profiling_buffer_size set to 2048.
+INFO: mxc-md 42800000.bus:camera: deferring cap_device registration
+Ethosu delegate: pmu_event0 set to 0.
+INFO: Ethosu delegate: pmu_event1 set to 0.
+INFO: Ethosu delegate: pmu_event2 set to 0.
+INFO: Ethosu delegate: pmu_event3 set to 0.
+INFO: EthosuDelegate: 31 nodes delegated out of 31 nodes with 1 partitions.
+rproc-virtio rproc-virtio.2.auto: assigned reserved memory node vdevbuffer@a4020000
+virtio_rpmsg_bus virtio0: rpmsg host is online
+rproc-virtio rproc-virtio.2.auto: registered virtio0 (type 7)
+rproc-virtio rproc-virtio.3.auto: assigned reserved memory node vdevbuffer@a4020000
+virtio_rpmsg_bus virtio1: rpmsg host is online
+virtio_rpmsg_bus virtio1: creating channel rpmsg-ethosu-channel addr 0x1e
+rproc-virtio rproc-virtio.3.auto: registered virtio1 (type 7)
+remoteproc remoteproc0: remote processor imx-rproc is now up
+
+0.874510: military uniform
+0.031373: Windsor tie
+0.015686: mortarboard
+0.011765: bulletproof vest
+0.007843: bow tie
+time: 4.217ms
+
+The current test result is about 4ms, which is about 20 times faster than without NPU.

@@ -8,7 +8,7 @@ LICENSE_FLAGS_ACCEPTED:append = " commercial"
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m33-demos'
 BSP_NXP_DERIVED:append:nxp-imx9  = " nxp-imx9"
 DISTROOVERRIDES:nxp-imx9 = "fsl fslc"
-MACHINEOVERRIDES:prepend:nxp-imx9 = "imx-generic-bsp:imx-nxp-bsp:imxdrm:imxpxp:mx9-generic-bsp:mx9-nxp-bsp:mx93-generic-bsp:mx93-nxp-bsp:"
+MACHINEOVERRIDES:prepend:nxp-imx9 = "imx-generic-bsp:imx-nxp-bsp:imxdrm:imxpxp:mx9-generic-bsp:mx9-nxp-bsp:mx93-generic-bsp:mx93-nxp-bsp:use-nxp-bsp:"
 
 2.1 GPU
 -------

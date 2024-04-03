@@ -103,6 +103,9 @@ For MCIMX93-EVK board:
 	If you want to connect LVDS panel:
 	tftp $fdt_addr imx93-11x11-evk-boe-wxga-lvds-panel.dtb
 
+	If you want to use lpspi master:
+	tftp $fdt_addr imx93-11x11-evk-lpspi.dtb
+
 4.1.5 Set bootargs and boot the system
 --------------------------------------
 

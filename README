@@ -209,6 +209,22 @@ If you want to build a xwayland image, please follow the steps as below:
 	# cat trip_point_1_temp
 	95000
 
+9 Optee-test
+------------
+
+Because optee os is integrated into the bootloader image, and due to license reasons,
+we don't support building the bootloader by default. Therefore, before using optee
+features, you need to refer to README.proprietary ("Build imx-boot") to compile an WIC image
+with the bootloader.
+
+1) Burn WIC image
+# bitbake wrlinux-image-std
+# dd if=wrlinux-image-<std-sato/std>-nxp-imx8.wic of=/dev/your_sd_dev
+
+2) run optee testing sample 
+
+# xtest -l15
+
 6. kexec/kdump
 ==============
 

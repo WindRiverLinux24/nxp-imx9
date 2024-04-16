@@ -109,6 +109,9 @@ For MCIMX93-EVK board:
 	If you want to use i3c:
 	tftp $fdt_addr imx93-11x11-evk-i3c.dtb
 
+	If you want to use MX93AUD-HAT:
+	tftp $fdt_addr imx93-11x11-evk-aud-hat.dtb
+
 4.1.5 Set bootargs and boot the system
 --------------------------------------
 
@@ -208,8 +211,8 @@ If you want to build a xwayland image, please follow the steps as below:
 	# cat trip_point_1_temp
 	95000
 
-9 Optee-test
-------------
+5.6 Optee-test
+--------------
 
 Because optee os is integrated into the bootloader image, and due to license reasons,
 we don't support building the bootloader by default. Therefore, before using optee
@@ -223,6 +226,19 @@ with the bootloader.
 2) run optee testing sample 
 
 # xtest -l15
+
+5.7 MX93AUD-HAT
+---------------
+
+Attach the MX93AUD-HAT to MCIMX93-EVK J1001, select imx93-11x11-evk-aud-hat.dtb to boot,
+plug the headset into the MX93AUD-HAT output J10 and utilize the imxcs42448 for playback
+
+root@nxp-imx9:~# aplay -l
+card 3: imxcs42448 [imx-cs42448], device 0: cs42448 cs42448-0 [cs42448 cs42448-0]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+
+aplay -Dhw:3,0 stereo1648s.wav
 
 6. kexec/kdump
 ==============

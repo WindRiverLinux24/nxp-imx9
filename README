@@ -240,6 +240,25 @@ card 3: imxcs42448 [imx-cs42448], device 0: cs42448 cs42448-0 [cs42448 cs42448-0
 
 aplay -Dhw:3,0 stereo1648s.wav
 
+5.8 FLEXCAN
+-----------
+
+Detail verification commands as below:
+
+Currently, imx93 J1101 is a can interface, 1-4 are 5V, CAN_H, CAN_L, and GND
+respectively. Please use a board that supports canfd function to connect, such as imx8qm.
+
+imx93:
+        # ip link set can0 up type can bitrate 500000 dbitrate 8000000 fd on
+	# candump can0 &
+	# ip -d -s link show can0
+imx8qm:
+        # ip link set can1 up type can bitrate 500000 dbitrate 8000000 fd on
+        # cansend can1 5A1#11.22.33.44.55.66.77.88
+        # ip -d -s link show can1
+
+If can0 dumps data from can1, FLEXCAN feature works fine.
+
 6. kexec/kdump
 ==============
 

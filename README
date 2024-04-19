@@ -259,6 +259,114 @@ imx8qm:
 
 If can0 dumps data from can1, FLEXCAN feature works fine.
 
+5.9 TSN
+-------
+
+Use eth1 of imx8mp to connect to eth1 of imx93
+
+1) Clock synchronization:
+
+Run ptp4l on two boards:
+ptp4l -i eth1 -p /dev/ptp1 -m -2
+
+ptp4l[1732.242]: master offset       -120 s2 freq   +1004 path delay       648
+ptp4l[1733.242]: master offset        -98 s2 freq    +990 path delay       730
+ptp4l[1734.242]: master offset         38 s2 freq   +1096 path delay       730
+ptp4l[1735.242]: master offset         24 s2 freq   +1094 path delay       764
+ptp4l[1736.242]: master offset         45 s2 freq   +1122 path delay       763
+ptp4l[1737.242]: master offset         50 s2 freq   +1140 path delay       762
+ptp4l[1738.243]: master offset         26 s2 freq   +1131 path delay       762
+ptp4l[1739.243]: master offset          8 s2 freq   +1121 path delay       764
+ptp4l[1740.243]: master offset         -5 s2 freq   +1110 path delay       765
+ptp4l[1741.243]: master offset        -17 s2 freq   +1097 path delay       769
+ptp4l[1742.243]: master offset        -10 s2 freq   +1099 path delay       770
+ptp4l[1743.243]: master offset         -5 s2 freq   +1101 path delay       769
+ptp4l[1744.243]: master offset         -5 s2 freq   +1099 path delay       769
+ptp4l[1745.243]: master offset        -18 s2 freq   +1085 path delay       770
+ptp4l[1746.244]: master offset         18 s2 freq   +1115 path delay       770
+ptp4l[1747.244]: master offset         10 s2 freq   +1113 path delay       770
+
+2) Qav
+
+imx93evk:
+
+<1> Set a queue map handle:
+ tc qdisc add dev eth1 root handle 1: mqprio num_tc 5 map 0 1 2 3 4 queues 1@0 1@1 1@2 1@3 1@4 hw 0
+<2> Set bandwidth of queue 3 to be 20 Mbps: 
+ tc qdisc replace dev eth1 parent 1:4 cbs locredit -1470 hicredit 30 sendslope -980000 idleslope 20000 offload 1
+<3> Send a stream into queue 3:
+ /home/root/samples/pktgen/pktgen_sample01_simple.sh -i eth1 -q 3 -s 500 -n 3000
+
+Get the result, bandwidth is 19 Mbps.
+
+root@nxp-imx9:~# /home/root/samples/pktgen/pktgen_sample01_simple.sh -i eth1 -q 3 -s 500 -n 3000
+WARN : Missing destination MAC address
+WARN : Missing destination IP address
+Running... ctrl^C to stop
+Done
+Result device: eth1
+Params: count 3000  min_pkt_size: 500  max_pkt_size: 500
+     frags: 0  delay: 0  clone_skb: 0  ifname: eth1
+     flows: 0 flowlen: 0
+     queue_map_min: 3  queue_map_max: 3
+     dst_min: 198.18.0.42  dst_max: 
+     src_min:   src_max: 
+     src_mac: 00:04:9f:08:78:b7 dst_mac: 02:5d:ae:ba:e0:00
+     udp_src_min: 9  udp_src_max: 109  udp_dst_min: 9  udp_dst_max: 9
+     src_mac_count: 0  dst_mac_count: 0
+     Flags: UDPSRC_RND  NO_TIMESTAMP  QUEUE_MAP_RND  
+Current:
+     pkts-sofar: 3000  errors: 0
+     started: 2089376122us  stopped: 2089994023us idle: 85250us
+     seq_num: 3001  cur_dst_mac_offset: 0  cur_src_mac_offset: 0
+     cur_saddr: 192.168.3.1  cur_daddr: 198.18.0.42
+     cur_udp_dst: 9  cur_udp_src: 92
+     cur_queue_map: 3
+     flows: 0
+Result: OK: 617900(c532650+d85250) usec, 3000 (500byte,0frags)
+  4855pps 19Mb/sec (19420000bps) errors: 0
+
+<4> Set bandwidth of queue 4 to be 40 Mbps:
+ tc qdisc replace dev eth1 parent 1:5 cbs locredit -1440 hicredit 60 sendslope -960000 idleslope 40000 offload 1
+<5> Send a stream into queue 4 and get the result:
+root@nxp-imx9:~# /home/root/samples/pktgen/pktgen_sample01_simple.sh -i eth1 -q 4 -s 500 -n 3000
+WARN : Missing destination MAC address
+WARN : Missing destination IP address
+Running... ctrl^C to stop
+Done
+Result device: eth1
+Params: count 3000  min_pkt_size: 500  max_pkt_size: 500
+     frags: 0  delay: 0  clone_skb: 0  ifname: eth1
+     flows: 0 flowlen: 0
+     queue_map_min: 4  queue_map_max: 4
+     dst_min: 198.18.0.42  dst_max: 
+     src_min:   src_max: 
+     src_mac: 00:04:9f:08:78:b7 dst_mac: 02:5d:ae:ba:e0:00
+     udp_src_min: 9  udp_src_max: 109  udp_dst_min: 9  udp_dst_max: 9
+     src_mac_count: 0  dst_mac_count: 0
+     Flags: UDPSRC_RND  NO_TIMESTAMP  QUEUE_MAP_RND  
+Current:
+     pkts-sofar: 3000  errors: 0
+     started: 2291228139us  stopped: 2291536099us idle: 44961us
+     seq_num: 3001  cur_dst_mac_offset: 0  cur_src_mac_offset: 0
+     cur_saddr: 192.168.3.1  cur_daddr: 198.18.0.42
+     cur_udp_dst: 9  cur_udp_src: 72
+     cur_queue_map: 4
+     flows: 0
+Result: OK: 307960(c262999+d44961) usec, 3000 (500byte,0frags)
+  9741pps 38Mb/sec (38964000bps) errors: 0
+
+<6> Send two streams into queue 3 and queue 4 using the command below:
+ /home/root/samples/pktgen/pktgen_twoqueue.sh -i eth1 -q 3 -s 1500 -n 0
+
+imx8mp:
+
+<1> use tcpdump to get tsn.pcap:
+ tcpdump -i eth1 -e -n -t -xx -c 3000 -w tsn.pcap
+<2> the frames sort by one Q3 frame and two Q4 frames:
+ Use wireshark to open tsn.pcap and you will find the frames sorted by one Q3 frame and two Q4 frames
+
+
 6. kexec/kdump
 ==============
 

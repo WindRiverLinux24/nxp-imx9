@@ -264,6 +264,11 @@ If can0 dumps data from can1, FLEXCAN feature works fine.
 
 Use eth1 of imx8mp to connect to eth1 of imx93
 
+Add preparations before testing:
+
+Load the following modules into the kernel.
+ sch_multiq.ko sch_cbs.ko sch_etf.ko sch_taprio.ko sch_mqprio.ko sch_ingress.ko act_skbedit.ko pktgen.ko
+
 1) Clock synchronization:
 
 Run ptp4l on two boards:

@@ -371,6 +371,32 @@ imx8mp:
 <2> the frames sort by one Q3 frame and two Q4 frames:
  Use wireshark to open tsn.pcap and you will find the frames sorted by one Q3 frame and two Q4 frames
 
+3) Qbv
+
+<1>Enable the ptp device, and get the current ptp time:
+ run 'ptp4l -i eth1 -p /dev/ptp1 -m' on two boad
+ 
+<2> get current time on imx93evk:
+ devmem2 0x428a0b08
+
+<3> Get the basetime to be 2 minutes later:
+ #Basetime = (currentime + 120) * 1000000000 = 1577187882000000000
+
+<4> Set time schedule, open queue 1 in 100 µs and open queue 2 in 100 µs on imx93:
+ tc qdisc replace dev eth1 parent root handle 100 taprio \
+ num_tc 5 map 0 1 2 3 4 queues 1@0 1@1 1@2 1@3 1@4 base-time $Basetime \
+ sched-entry S 1 100000 \
+ sched-entry S 2 100000 \
+ sched-entry S 4 100000 flags 2
+
+<5> Capture the streams on imx8mp:
+ tcpdump -i eth0 -e -n -t -xx -c 3000 -w tsn.pcap
+
+<6> Send two streams into queue 1 and queue 2 on imx93:
+ /home/root/samples/pktgen/pktgen_twoqueue.sh -i eth1 -q 1 -s 1000 -n 0 -m 90:e2:ba:ff:ff:ff
+
+Capture the streams on TestCenter, 100 µs queue 1 frames (length=1004) and 100 µs queue 2 frames
+(length=1504) will be got.
 
 6. kexec/kdump
 ==============

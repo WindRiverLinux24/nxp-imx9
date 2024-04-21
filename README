@@ -398,6 +398,17 @@ imx8mp:
 Capture the streams on TestCenter, 100 µs queue 1 frames (length=1004) and 100 µs queue 2 frames
 (length=1504) will be got.
 
+5.10 camera
+-----------
+
+1) Download the "ap1302_60fps_ar0144_27M_2Lane_awb_tuning.bin" file from
+https://github.com/ONSemiconductor/ap1302_binaries/tree/main/NXP_i.MX93
+
+2) Rename it to "ap1302.fw"
+
+3) After booting the Linux OS, copy the file to the target board under "/lib/firmware/imx/camera" and reboot.
+
+
 6. kexec/kdump
 ==============
 

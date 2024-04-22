@@ -398,6 +398,28 @@ imx8mp:
 Capture the streams on TestCenter, 100 µs queue 1 frames (length=1004) and 100 µs queue 2 frames
 (length=1504) will be got.
 
+4) Qbu
+
+Since verifying the Qbu test case requires reading the Start mPacket Delimiter (SMD)
+of the Ethernet frame to determine its type (e.g., the SMD value of an express message
+is 0xd5, verify message is 0x7, respond message is 0x19), obtaining the SMD value
+typically requires specialized network equipment like TestCenter. However, we can validate
+Ethernet Frame Preamble using the following simple method:
+
+Connect eth1 of imx8mp and imx93 boards back to back. Then,
+run below command to enable the hardware verification:
+
+ ethtool --set-frame-preemption eth1 fp on preemptible-queues-mask 0x04 min-frag-size 60
+
+imx93 can see:
+    imx-dwmac 428a0000.ethernet eth1: FPE: Verify mPacket is transmitted
+    imx-dwmac 428a0000.ethernet eth1: Send Verify mPacket lo_state=1 lp_state=0
+
+imx8mp can see:
+    imx-dwmac 30bf0000.ethernet eth1: FPE: Verify mPacket is received
+
+<1>
+
 5.10 camera
 -----------
 

@@ -112,6 +112,12 @@ For MCIMX93-EVK board:
 	If you want to use MX93AUD-HAT:
 	tftp $fdt_addr imx93-11x11-evk-aud-hat.dtb
 
+	If you want to use flexspi:
+	tftp $fdt_addr imx93-11x11-evk-flexspi-m2.dtb
+
+	If you want to use lpuart:
+	tftp $fdt_addr imx93-11x11-evk-lpuart.dtb
+
 4.1.5 Set bootargs and boot the system
 --------------------------------------
 

@@ -32,9 +32,9 @@ ERROR_QA:append = " ${WARN_TO_ERROR_QA}"
 
 IMAGE_INSTALL:append = "  weston weston-init imx-pxp-g2d imx-g2d-samples weston-xwayland"
 
-PREFERRED_VERSION_weston:mx93-nxp-bsp = "11.0.1.imx"
+PREFERRED_VERSION_weston:mx93-nxp-bsp = "11.0.3.imx"
 PREFERRED_PROVIDER_virtual/libg2d:mx93-nxp-bsp ?= "imx-pxp-g2d"
-PREFERRED_VERSION_libdrm:mx93-nxp-bsp = "2.4.114.imx"
+PREFERRED_VERSION_libdrm:mx93-nxp-bsp = "2.4.115.imx"
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-g2d-samples'
 CUSTOMER_RECIPES:fsl-bsp-release += 'mesa'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-pxp-g2d'
@@ -74,7 +74,7 @@ IMAGE_INSTALL:append = " ethos-u-firmware ethos-u-driver-stack ethos-u-vela eiq-
 
 cd /usr/bin/eiq-examples-git/image_classification
 mkdir -p ../models/
-cp /usr/bin/tensorflow-lite-2.10.0/examples/mobilenet_v1_1.0_224_quant.tflite ../models/
+cp /usr/bin/tensorflow-lite-2.12.1/examples/mobilenet_v1_1.0_224_quant.tflite ../models/
 
 root@nxp-imx9:/usr/bin/eiq-examples-git/image_classification# python3 label_image.py -d /usr/lib64/libethosu_delegate.so -i grace_hopper.bmp -l labels.txt
 INFO: Ethosu delegate: device_name set to /dev/ethosu0.

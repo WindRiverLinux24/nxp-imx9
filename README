@@ -396,12 +396,12 @@ imx8mp:
  sched-entry S 4 100000 flags 2
 
 <5> Capture the streams on imx8mp:
- tcpdump -i eth0 -e -n -t -xx -c 3000 -w tsn.pcap
+ tcpdump -i eth1 -e -n -t -xx -c 3000 -w tsn.pcap
 
 <6> Send two streams into queue 1 and queue 2 on imx93:
  /home/root/samples/pktgen/pktgen_twoqueue.sh -i eth1 -q 1 -s 1000 -n 0 -m 90:e2:ba:ff:ff:ff
 
-Capture the streams on TestCenter, 100 µs queue 1 frames (length=1004) and 100 µs queue 2 frames
+Use wireshark to open tsn.pcap, 100 µs queue 1 frames (length=1004) and 100 µs queue 2 frames
 (length=1504) will be got.
 
 4) Qbu

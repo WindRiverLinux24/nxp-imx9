@@ -436,6 +436,20 @@ https://github.com/ONSemiconductor/ap1302_binaries/tree/main/NXP_i.MX93
 
 3) After booting the Linux OS, copy the file to the target board under "/lib/firmware/imx/camera" and reboot.
 
+5.11 Low Drive Mode
+-------------------
+
+The Linux kernel configures the system to run in Overdrive mode (ODM) by default.
+This Overdrive mode and associated performance are not necessary for some user
+applications. Users can transition to Nominal or Low-drive mode as defined in
+the i.MX 93 data sheet instead.
+
+You can switch to Low Drive Mode with below command:
+
+echo 1 > /sys/devices/platform/imx93-lpm/mode
+System switching to ND mode...
+
+cat /sys/devices/platform/imx93-lpm/mode
 
 6. kexec/kdump
 ==============

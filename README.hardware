@@ -33,7 +33,6 @@ The following BSP features are validated and supported.
 
   o Bus
 	+ I2C: On-Chip I2C controller
-	+ PCIe: On-Chip PCIe controller
 	+ uSDHC: On-Chip ultra secured digital host controller
 
   o Network

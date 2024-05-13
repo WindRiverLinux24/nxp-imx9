@@ -55,9 +55,11 @@ The following BSP features are validated and supported.
 		+ BT_SCO codec
 		+ cs42448 codec
 	+ MIPI DSI Host Controller:
-		+ Raydium RM67191 FHD panel (MX8-DSI-OLED1 accessory card)
+		+ MIPI to HDMI
+	+ LVDS LCD
+		+ LVDS LCD: DY1212W-4856
 	+ MIPI CSI Host Controller:
-		+ OmniVision chipset OV5640 (MINISASTOCSI accessory card)
+		 + RPI-CAM-MIPI AR0144 sensor
 	+ GPU: Vivante GC7000 Lite
 	+ NPU: Arm Ethos-U65 microNPU
 

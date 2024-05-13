@@ -53,16 +53,15 @@ The following BSP features are validated and supported.
 		+ WM8962 codec
 		+ XCVR codec
 		+ BT_SCO codec
+		+ cs42448 codec
 	+ MIPI DSI Host Controller:
 		+ Raydium RM67191 FHD panel (MX8-DSI-OLED1 accessory card)
 	+ MIPI CSI Host Controller:
 		+ OmniVision chipset OV5640 (MINISASTOCSI accessory card)
-	+ VPU: On-Chip video processing unit
 	+ GPU: Vivante GC7000 Lite
 	+ NPU: Arm Ethos-U65 microNPU
 
   o Power Mgmt
-	+ CPU Freq
 	+ Suspend to RAM
 
   o Misc Devices
@@ -71,7 +70,7 @@ The following BSP features are validated and supported.
 	+ GPIO: On-Chip general purpose Input/Output
 	+ RTC: On-Chip secure real time clock
 	+ Thermal: Thermal Management Unit (TMU)
-	+ SDMA: On-Chip smart direct memory access controller
+	+ EDMA: On-Chip Enhanced direct memory access controller
 	+ SEC Engine: CAAM crypto driver
 
 

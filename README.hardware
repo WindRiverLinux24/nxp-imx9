@@ -20,7 +20,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-  - 2024/03 (LINUXPG-1987): Wind River Linux 10.23 RCPL09. Support MCIMX93-EVK board for both standard and preempt-rt
+  - 2024/03 (LINUXPG-2099): Wind River Linux 10.23 RCPL10. Support MCIMX93-EVK board for both standard and preempt-rt
                            kernel based on NXP IMX SDK v6.1
 
 3. BSP Features

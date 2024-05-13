@@ -10,4 +10,5 @@ IMAGE_INSTALL += "optee-client optee-os optee-test"
 IMAGE_INSTALL += "openssl-engines"
 IMAGE_INSTALL += "iproute2-tc"
 IMAGE_INSTALL += "devmem2"
+IMAGE_INSTALL += "pktgen-scripts"
 require conf/make_nxp_imx9_wic.inc

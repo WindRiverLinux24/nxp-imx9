@@ -529,7 +529,6 @@ Connect usb disk with usb typec port(J17) on MCIMX93-EVK board.
 Usb disk is detected, and then confirm the speed with command as below:
 
 	# lsusb -t
-	/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=/1p, 5000M
-	    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=usb-storage, 5000M
-	/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=/1p, 480M
+	/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=ci_hdrc/1p, 480M
+	    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=usb-storage, 480M
 

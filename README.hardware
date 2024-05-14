@@ -46,7 +46,6 @@ The following BSP features are validated and supported.
 
   o Storage
 	+ eMMC: On-chip 32GB  MTFC32GAKAEEF-AIT
-	+ NOR flash: 32 MB MT25QU256ABA1 SPI NOR Flash
 
   o Multimedia
 	+ SAI Audio:
@@ -79,8 +78,6 @@ The following BSP features are validated and supported.
 3.2 Unsupported Features
 ------------------------
 
-The following features are not supported and not validated:
-
 4. BSP Notes
 ============
 
@@ -108,11 +105,11 @@ MCIMX93-EVK:
 The following table shows the boot switch setup for SD2 boot
 
 Switch  D1      D2      D3      D4
-SW4     OFF     OFF     ON      ON
+SW1301  OFF     ON      OFF     OFF
 
 2. Booting from eMMC
 
 The following table shows the boot switch settings to boot from eMMC MTFC16GAKAECN-2M.
 
 Switch  D1      D2      D3      D4
-SW4     OFF     OFF     ON      OFF
+SW1301  OFF     OFF     OFF     OFF

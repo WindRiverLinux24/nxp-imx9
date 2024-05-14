@@ -386,7 +386,7 @@ imx8mp:
  devmem2 0x428a0b08
 
 <3> Get the basetime to be 2 minutes later:
- #Basetime = (currentime + 120) * 1000000000 = 1577187882000000000
+ #Basetime = (currentime + 120) * 1000000000
 
 <4> Set time schedule, open queue 1 in 100 µs and open queue 2 in 100 µs on imx93:
  tc qdisc replace dev eth1 parent root handle 100 taprio \
@@ -423,8 +423,6 @@ imx93 can see:
 
 imx8mp can see:
     imx-dwmac 30bf0000.ethernet eth1: FPE: Verify mPacket is received
-
-<1>
 
 5.10 camera
 -----------

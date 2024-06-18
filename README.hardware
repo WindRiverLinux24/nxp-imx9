@@ -59,7 +59,7 @@ The following BSP features are validated and supported.
 		+ LVDS LCD: DY1212W-4856
 	+ MIPI CSI Host Controller:
 		 + RPI-CAM-MIPI AR0144 sensor
-	+ GPU: Vivante GC7000 Lite
+	+ GPU: PXP G2D 
 	+ NPU: Arm Ethos-U65 microNPU
 
   o Power Mgmt

@@ -1,7 +1,7 @@
 1.0 common configuration
 ------------------------
 # All private packages of imx require the following configuration
-BB_NO_NETWORK ?= '0'
+BB_NO_NETWORK = '0'
 ACCEPT_FSL_EULA = "1"
 LICENSE_FLAGS_ACCEPTED:append = " commercial"
 

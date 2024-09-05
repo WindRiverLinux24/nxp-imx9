@@ -5,8 +5,8 @@ nxp_imx9_wic() {
         for config in ${UBOOT_CONFIG}; do
             cd "${DEPLOY_DIR_IMAGE}"
 
-            ofname=${IMAGE_LINK_NAME}-${config}${IMAGE_VERSION_SUFFIX}.rootfs.wic
-            cp ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.wic ${IMGDEPLOYDIR}/$ofname
+            ofname=${IMAGE_BASENAME}${IMAGE_MACHINE_SUFFIX}-${config}${IMAGE_NAME_SUFFIX}${IMAGE_VERSION_SUFFIX}.wic
+            cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.wic ${IMGDEPLOYDIR}/$ofname
             dd if=imx-boot-nxp-imx9-${UBOOT_CONFIG}.bin-flash_singleboot of=${IMGDEPLOYDIR}/$ofname bs=512 seek=64 conv=fsync,notrunc
 
             cd "${IMGDEPLOYDIR}"
@@ -14,11 +14,11 @@ nxp_imx9_wic() {
             linkname="${IMAGE_LINK_NAME}-${config}.wic"
             ln -sf $ofname $linkname
         done
-	# Remove the default wic file
+        # Remove the default wic file
         rm -rf "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.wic"
         rm -rf "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.wic.bmap"
-        rm -rf "${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.wic"
-        rm -rf "${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.wic.bmap"
+        rm -rf "${IMGDEPLOYDIR}/${IMAGE_NAME}.wic"
+        rm -rf "${IMGDEPLOYDIR}/${IMAGE_NAME}.wic.bmap"
     fi
 
 }

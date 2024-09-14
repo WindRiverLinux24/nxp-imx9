@@ -97,25 +97,32 @@ and are copied to the export directory of the TFTP server.
 
 4.1.3 Download DTB
 ------------------
-For MCIMX93-EVK board:
+There is a default dtb to support for the most of features for MCIMX93-EVK board.
+Besides the default dtb, there are also other dtb files to support for some specific
+features, sub-boards and accessory used to extend features. Detailed list as below:
+
+	Default dtb:
 	tftp $fdt_addr imx93-11x11-evk.dtb
 
-	If you want to connect LVDS panel:
+	If user wants to connect LVDS panel:
 	tftp $fdt_addr imx93-11x11-evk-boe-wxga-lvds-panel.dtb
 
-	If you want to use lpspi master:
+	If user wants to enable lpspi master:
 	tftp $fdt_addr imx93-11x11-evk-lpspi.dtb
 
-	If you want to use i3c:
+	If user wants to enable i3c:
 	tftp $fdt_addr imx93-11x11-evk-i3c.dtb
 
-	If you want to use MX93AUD-HAT:
+	If user wants to connect MX93AUD-HAT sub-board:
 	tftp $fdt_addr imx93-11x11-evk-aud-hat.dtb
 
-	If you want to use flexspi:
+	If user wants to enable MQS(Medium quality sound):
+	tftp $fdt_addr imx93-11x11-evk-mqs.dtb
+
+	If user wants to enable flexspi:
 	tftp $fdt_addr imx93-11x11-evk-flexspi-m2.dtb
 
-	If you want to use lpuart:
+	If user wants to enable lpuart:
 	tftp $fdt_addr imx93-11x11-evk-lpuart.dtb
 
 4.1.5 Set bootargs and boot the system
@@ -148,38 +155,36 @@ to the bootargs parameter of U-Boot.
 5.2 USB feature
 ---------------
 
-5.2.1 USB OTG Usage and verification
-------------------------------------
+5.2.1 USB OTG device mode
+-------------------------
 
-1) Verify the OTG device mode
+Connect USB1(J401) to host PC with a usb cable, one end is type-A, another end is type-C.
+And run below command to make the target working as USB disk.
 
-Plug in cable B and connect to the host machine.
+		# modprobe g_mass_storage file=/dev/mmcblk1p1 stall=0 removable=1
 
-Board configuration:
+After the g_mass_storage driver module is loaded normally, there will be an usb disk detected by host PC.
 
-	# ifconfig usb0 192.168.1.10
+5.2.2 USB OTG host mode
+-----------------------
 
-Host machine configuration:
+After system boots up, if user connects an usb disk with usb type-C USB1 port(J401) or USB2(J302) on MCIMX93-EVK board,
+The usb disk will be detected, and then confirm the speed with command as below:
 
-	# sudo ifconfig usb0 192.168.1.100
-	# ping 192.168.1.10 -c 2
-	PING 192.168.1.10 (192.168.1.10) 56(84) bytes of data.
-	64 bytes from 192.168.1.10: icmp_req=1 ttl=64 time=2.06 ms
-	64 bytes from 192.168.1.10: icmp_req=2 ttl=64 time=0.286 ms
-	...
+	# lsusb -t
+	/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=ci_hdrc/1p, 480M
+	    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=usb-storage, 480M
 
-2) Switch to OTG host mode
-
-Replace cable B with cable A.
-
-5.3 Static PM
--------------
+5.3 Static Power Management
+---------------------------
 
 The debug UART can be set as a wakeup source with:
 
-For MCIMX93-EVK board:
+Enter suspend status with below command:
 	# echo enabled > /sys/class/tty/ttyLP0/power/wakeup
 	# echo mem > /sys/power/state
+
+Click any key of keyboard to resume system.
 
 5.4 Graphics
 ------------
@@ -211,11 +216,11 @@ If you want to build a xwayland image, please follow the steps as below:
 	# cat trip_point_0_type
 	passive
 	# cat trip_point_0_temp
-	85000
+	80000
 	# cat trip_point_1_type
 	critical
 	# cat trip_point_1_temp
-	95000
+	90000
 
 5.6 Optee-test
 --------------
@@ -231,20 +236,99 @@ with the bootloader.
 
 2) run optee testing sample 
 
-# xtest -l15
+# xtest -l 15
 
-5.7 MX93AUD-HAT
----------------
+5.7 Audio
+---------
 
-Attach the MX93AUD-HAT to MCIMX93-EVK J1001, select imx93-11x11-evk-aud-hat.dtb to boot,
-plug the headset into the MX93AUD-HAT output J10 and utilize the imxcs42448 for playback
+5.7.1 Audio with codec WM8962B
+------------------------------
 
-root@nxp-imx9:~# aplay -l
-card 3: imxcs42448 [imx-cs42448], device 0: cs42448 cs42448-0 [cs42448 cs42448-0]
-  Subdevices: 1/1
-  Subdevice #0: subdevice #0
+Connect a 4-segment headset with microphone to J1201.
 
-aplay -Dhw:3,0 stereo1648s.wav
+1) Test audio playback with below command
+
+	 # aplay -l
+	 ......
+	 card 3: wm8962audio [wm8962-audio], device 0: HiFi wm8962-0 [HiFi wm8962-0]
+		Subdevices: 1/1
+		Subdevice #0: subdevice #0
+   # speaker-test -c2 -twav -Dhw:3,0
+
+2) Test audio record with below command
+
+	 # arecord -l
+	 ......
+	 card 3: wm8962audio [wm8962-audio], device 0: HiFi wm8962-0 [HiFi wm8962-0]
+		Subdevices: 1/1
+		Subdevice #0: subdevice #0
+   # arecord -Dplughw:3,0 -r 44100 -f S16_LE -c 2 -d 5 record.wav
+   Play wav file
+	 # aplay record.wav -Dhw:3,0
+
+5.7.2 Four onboard PDM microphone
+---------------------------------
+
+Connect a 4-segment headset with microphone to J1201.
+
+Audio record with below command:
+
+	 # arecord -l
+	 ......
+	 card 1: micfilaudio [micfil-audio], device 0: micfil hifi snd-soc-dummy-dai-0 [micfil hifi snd-soc-dummy-dai-0]
+		Subdevices: 1/1
+		Subdevice #0: subdevice #0
+	 # arecord -Dplughw:1,0 -r 44100 -f S16_LE -c 2 -d 5 record.wav
+
+Audio play with below command:
+
+	 # aplay record.wav -Dhw:3,0
+
+
+5.7.3 MQS(Medium quality sound)
+-------------------------------
+
+Connect a 4-segment headset with microphone to J1301. Boot up board with dtb imx93-11x11-evk-mqs.dtb,
+and then run below comamnd to test audio play.
+
+	 # speaker-test -c2 -twav -Dhw:0,0
+
+
+5.7.4 MX93AUD-HAT Audio extend card
+-----------------------------------
+
+Connect the MX93AUD-HAT board to the J1001 MCIMX93-EVK board, and then boot up board with
+imx93-11x11-evk-aud-hat.dtb file.
+
+1) Test audio playback
+
+Connect a 4-segment headset with microphone to J10~13 separately, and then run below command
+
+	 # aplay -l
+	 ......
+	 card 3: imxcs42448 [imx-cs42448], device 0: cs42448 cs42448-0 [cs42448 cs42448-0]
+		Subdevices: 1/1
+		Subdevice #0: subdevice #0
+   Play audio with 6 channels
+	 # speaker-test -c6 -twav -Dhw:3,0
+	 Play audio with 8 channels
+	 # speaker-test -c8 -twav -Dhw:3,0
+
+
+2) Test audio record
+
+Connect a 4-segment headset with microphone to J6 or J7, and then run below command
+
+	 # arecord -l
+	 card 3: imxcs42448 [imx-cs42448], device 0: cs42448 cs42448-0 [cs42448 cs42448-0]
+		Subdevices: 1/1
+		Subdevice #0: subdevice #0
+	 # arecord -Dhw:3,0 -d5 -r48000 -fS16_LE -c6 > record.wav
+
+Connect a 4-segment headset with microphone to J13, and then run below command to play wav file
+
+	 # aplay -twav -r 48000 -Dhw:3,0 -c 6 record.wav
+
 
 5.8 FLEXCAN
 -----------
@@ -252,180 +336,22 @@ aplay -Dhw:3,0 stereo1648s.wav
 Detail verification commands as below:
 
 Currently, imx93 J1101 is a can interface, 1-4 are 5V, CAN_H, CAN_L, and GND
-respectively. Please use a board that supports canfd function to connect, such as imx8qm.
+respectively. Please use a board that supports canfd function to connect, such as imx8qm-mek.
 
-imx93:
-        # ip link set can0 up type can bitrate 500000 dbitrate 8000000 fd on
-	# candump can0 &
-	# ip -d -s link show can0
-imx8qm:
-        # ip link set can1 up type can bitrate 500000 dbitrate 8000000 fd on
-        # cansend can1 5A1#11.22.33.44.55.66.77.88
-        # ip -d -s link show can1
+Run below commands on imx93-evk board:
+	 # ip link set can0 up type can bitrate 500000 dbitrate 8000000 fd on
+	 # candump can0 &
+	 # ip -d -s link show can0
+
+Run below commands on imx8qm-mek:
+	 # ip link set can1 up type can bitrate 500000 dbitrate 8000000 fd on
+	 # cansend can1 5A1#11.22.33.44.55.66.77.88
+	 # ip -d -s link show can1
 
 If can0 dumps data from can1, FLEXCAN feature works fine.
 
-5.9 TSN
--------
-
-Use eth1 of imx8mp to connect to eth1 of imx93
-
-Add preparations before testing:
-
-Load the following modules into the kernel.
- sch_multiq.ko sch_cbs.ko sch_etf.ko sch_taprio.ko sch_mqprio.ko sch_ingress.ko act_skbedit.ko pktgen.ko
-
-1) Clock synchronization:
-
-Run ptp4l on two boards:
-ptp4l -i eth1 -p /dev/ptp1 -m -2
-
-ptp4l[1732.242]: master offset       -120 s2 freq   +1004 path delay       648
-ptp4l[1733.242]: master offset        -98 s2 freq    +990 path delay       730
-ptp4l[1734.242]: master offset         38 s2 freq   +1096 path delay       730
-ptp4l[1735.242]: master offset         24 s2 freq   +1094 path delay       764
-ptp4l[1736.242]: master offset         45 s2 freq   +1122 path delay       763
-ptp4l[1737.242]: master offset         50 s2 freq   +1140 path delay       762
-ptp4l[1738.243]: master offset         26 s2 freq   +1131 path delay       762
-ptp4l[1739.243]: master offset          8 s2 freq   +1121 path delay       764
-ptp4l[1740.243]: master offset         -5 s2 freq   +1110 path delay       765
-ptp4l[1741.243]: master offset        -17 s2 freq   +1097 path delay       769
-ptp4l[1742.243]: master offset        -10 s2 freq   +1099 path delay       770
-ptp4l[1743.243]: master offset         -5 s2 freq   +1101 path delay       769
-ptp4l[1744.243]: master offset         -5 s2 freq   +1099 path delay       769
-ptp4l[1745.243]: master offset        -18 s2 freq   +1085 path delay       770
-ptp4l[1746.244]: master offset         18 s2 freq   +1115 path delay       770
-ptp4l[1747.244]: master offset         10 s2 freq   +1113 path delay       770
-
-2) Qav
-
-imx93evk:
-
-<1> Set a queue map handle:
- tc qdisc add dev eth1 root handle 1: mqprio num_tc 5 map 0 1 2 3 4 queues 1@0 1@1 1@2 1@3 1@4 hw 0
-<2> Set bandwidth of queue 3 to be 20 Mbps: 
- tc qdisc replace dev eth1 parent 1:4 cbs locredit -1470 hicredit 30 sendslope -980000 idleslope 20000 offload 1
-<3> Send a stream into queue 3:
- /home/root/samples/pktgen/pktgen_sample01_simple.sh -i eth1 -q 3 -s 500 -n 3000
-
-Get the result, bandwidth is 19 Mbps.
-
-root@nxp-imx9:~# /home/root/samples/pktgen/pktgen_sample01_simple.sh -i eth1 -q 3 -s 500 -n 3000
-WARN : Missing destination MAC address
-WARN : Missing destination IP address
-Running... ctrl^C to stop
-Done
-Result device: eth1
-Params: count 3000  min_pkt_size: 500  max_pkt_size: 500
-     frags: 0  delay: 0  clone_skb: 0  ifname: eth1
-     flows: 0 flowlen: 0
-     queue_map_min: 3  queue_map_max: 3
-     dst_min: 198.18.0.42  dst_max: 
-     src_min:   src_max: 
-     src_mac: 00:04:9f:08:78:b7 dst_mac: 02:5d:ae:ba:e0:00
-     udp_src_min: 9  udp_src_max: 109  udp_dst_min: 9  udp_dst_max: 9
-     src_mac_count: 0  dst_mac_count: 0
-     Flags: UDPSRC_RND  NO_TIMESTAMP  QUEUE_MAP_RND  
-Current:
-     pkts-sofar: 3000  errors: 0
-     started: 2089376122us  stopped: 2089994023us idle: 85250us
-     seq_num: 3001  cur_dst_mac_offset: 0  cur_src_mac_offset: 0
-     cur_saddr: 192.168.3.1  cur_daddr: 198.18.0.42
-     cur_udp_dst: 9  cur_udp_src: 92
-     cur_queue_map: 3
-     flows: 0
-Result: OK: 617900(c532650+d85250) usec, 3000 (500byte,0frags)
-  4855pps 19Mb/sec (19420000bps) errors: 0
-
-<4> Set bandwidth of queue 4 to be 40 Mbps:
- tc qdisc replace dev eth1 parent 1:5 cbs locredit -1440 hicredit 60 sendslope -960000 idleslope 40000 offload 1
-<5> Send a stream into queue 4 and get the result:
-root@nxp-imx9:~# /home/root/samples/pktgen/pktgen_sample01_simple.sh -i eth1 -q 4 -s 500 -n 3000
-WARN : Missing destination MAC address
-WARN : Missing destination IP address
-Running... ctrl^C to stop
-Done
-Result device: eth1
-Params: count 3000  min_pkt_size: 500  max_pkt_size: 500
-     frags: 0  delay: 0  clone_skb: 0  ifname: eth1
-     flows: 0 flowlen: 0
-     queue_map_min: 4  queue_map_max: 4
-     dst_min: 198.18.0.42  dst_max: 
-     src_min:   src_max: 
-     src_mac: 00:04:9f:08:78:b7 dst_mac: 02:5d:ae:ba:e0:00
-     udp_src_min: 9  udp_src_max: 109  udp_dst_min: 9  udp_dst_max: 9
-     src_mac_count: 0  dst_mac_count: 0
-     Flags: UDPSRC_RND  NO_TIMESTAMP  QUEUE_MAP_RND  
-Current:
-     pkts-sofar: 3000  errors: 0
-     started: 2291228139us  stopped: 2291536099us idle: 44961us
-     seq_num: 3001  cur_dst_mac_offset: 0  cur_src_mac_offset: 0
-     cur_saddr: 192.168.3.1  cur_daddr: 198.18.0.42
-     cur_udp_dst: 9  cur_udp_src: 72
-     cur_queue_map: 4
-     flows: 0
-Result: OK: 307960(c262999+d44961) usec, 3000 (500byte,0frags)
-  9741pps 38Mb/sec (38964000bps) errors: 0
-
-<6> Send two streams into queue 3 and queue 4 using the command below:
- /home/root/samples/pktgen/pktgen_twoqueue.sh -i eth1 -q 3 -s 1500 -n 0
-
-imx8mp:
-
-<1> use tcpdump to get tsn.pcap:
- tcpdump -i eth1 -e -n -t -xx -c 3000 -w tsn.pcap
-<2> the frames sort by one Q3 frame and two Q4 frames:
- Use wireshark to open tsn.pcap and you will find the frames sorted by one Q3 frame and two Q4 frames
-
-3) Qbv
-
-<1>Enable the ptp device, and get the current ptp time:
- run 'ptp4l -i eth1 -p /dev/ptp1 -m' on two boad
- 
-<2> get current time on imx93evk:
- devmem2 0x428a0b08
-
-<3> Get the basetime to be 2 minutes later:
- #Basetime = (currentime + 120) * 1000000000
-
-<4> Set time schedule, open queue 1 in 100 µs and open queue 2 in 100 µs on imx93:
- tc qdisc replace dev eth1 parent root handle 100 taprio \
- num_tc 5 map 0 1 2 3 4 queues 1@0 1@1 1@2 1@3 1@4 base-time $Basetime \
- sched-entry S 1 100000 \
- sched-entry S 2 100000 \
- sched-entry S 4 100000 flags 2
-
-<5> Capture the streams on imx8mp:
- tcpdump -i eth1 -e -n -t -xx -c 3000 -w tsn.pcap
-
-<6> Send two streams into queue 1 and queue 2 on imx93:
- /home/root/samples/pktgen/pktgen_twoqueue.sh -i eth1 -q 1 -s 1000 -n 0 -m 90:e2:ba:ff:ff:ff
-
-Use wireshark to open tsn.pcap, 100 µs queue 1 frames (length=1004) and 100 µs queue 2 frames
-(length=1504) will be got.
-
-4) Qbu
-
-Since verifying the Qbu test case requires reading the Start mPacket Delimiter (SMD)
-of the Ethernet frame to determine its type (e.g., the SMD value of an express message
-is 0xd5, verify message is 0x7, respond message is 0x19), obtaining the SMD value
-typically requires specialized network equipment like TestCenter. However, we can validate
-Ethernet Frame Preamble using the following simple method:
-
-Connect eth1 of imx8mp and imx93 boards back to back. Then,
-run below command to enable the hardware verification:
-
- ethtool --set-frame-preemption eth1 fp on preemptible-queues-mask 0x04 min-frag-size 60
-
-imx93 can see:
-    imx-dwmac 428a0000.ethernet eth1: FPE: Verify mPacket is transmitted
-    imx-dwmac 428a0000.ethernet eth1: Send Verify mPacket lo_state=1 lp_state=0
-
-imx8mp can see:
-    imx-dwmac 30bf0000.ethernet eth1: FPE: Verify mPacket is received
-
-5.10 camera
------------
+5.9 camera
+----------
 
 1) Download the "ap1302_60fps_ar0144_27M_2Lane_awb_tuning.bin" file from
 https://github.com/ONSemiconductor/ap1302_binaries/tree/main/NXP_i.MX93
@@ -434,7 +360,13 @@ https://github.com/ONSemiconductor/ap1302_binaries/tree/main/NXP_i.MX93
 
 3) After booting the Linux OS, copy the file to the target board under "/lib/firmware/imx/camera" and reboot.
 
-5.11 Low Drive Mode
+4) After system boots up again, run below command to preview video on screen
+
+	 # gst-launch-1.0 -v v4l2src device=/dev/video0 ! "video/x-raw,format=YUY2,width=1280,height=800" ! queue ! waylandsink
+
+Note: In order to preview video on screen, user needs to build wrlinux-image-std-sato image
+
+5.10 Low Drive Mode
 -------------------
 
 The Linux kernel configures the system to run in Overdrive mode (ODM) by default.
@@ -449,6 +381,7 @@ System switching to ND mode...
 
 cat /sys/devices/platform/imx93-lpm/mode
 
+
 6. kexec/kdump
 ==============
 
@@ -462,20 +395,36 @@ To build the boot kernel, enable kexec and kdump in your local.conf file:
 
 	WRTEMPLATE = "feature/kexec feature/kdump"
 
-6.1 kdump
+6. kexec
+--------
+
+After system boots up, copy Image to the rootfs, and run below command:
+
+	 # vim kexec.arg
+	 Add below content into file, and then save it
+	 console=ttyLP0,115200 earlycon no_console_suspend root=/dev/nfs rw nfsroot=<host ip>:<rootfs path>,v3,tcp ip=dhcp
+	 # kexec -l /root/Image --append="$(<kexec.args)"
+	 # kexec -e
+
+6.2 kdump
 ---------
 
-For the boot kernel:
-To reserve a memory region for the capture kernel, you need to pass the bootargs
-argument "crashkernel" to the boot kernel as follow:
+In order to run the kdump feature, it needs to reserve a memory region for the capture kernel.
+So user needs to add below parameter into bootargs when booting up the boot kernel image.
 
     crashkernel=512M
 
-For the dump-capture kernel:
-Before booting the dump-capture kernel, add "maxcpus=1 cma=128M" to the boot parameter.
+After system boots up, copy Image to the rootfs, and run below command:
 
-NOTE: Use Image as a secondary kernel. It can be found in the
-tmp-glibc/deploy/images/nxp-imx9/ directory.
+	 # vim kdump.arg
+	 Add below content into file, and then save it
+	 console=ttyLP0,115200 earlycon no_console_suspend root=/dev/nfs rw nfsroot=<host ip>:<rootfs path>,v3,tcp ip=dhcp maxcpus=1
+	 # kexec -p /root/Image --append="$(<kdump.args)"
+	 # echo c > /proc/sysrq-trigger
+
+Note:
+- Before booting the dump-capture kernel, add "maxcpus=1 cma=128M" to the boot parameter.
+- Use Image as a secondary kernel. It can be found in the tmp-glibc/deploy/images/nxp-imx9/ directory.
 
 For more detailed info about kdump, refer to Documentation/kdump/kdump.txt
 in the kernel source tree.
@@ -514,19 +463,3 @@ u-boot=>setenv bootfile Image
 u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=${console},${baudrate} earlycon ip=dhcp'
 u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
 u-boot=>run bootcmd
-
-8. USB OTG
-==========
-
-This section only describs how to verify usb otg feature on MCIMX93-EVK board.
-
-8.1 Host Mode
--------------
-
-Connect usb disk with usb typec port(J17) on MCIMX93-EVK board.
-Usb disk is detected, and then confirm the speed with command as below:
-
-	# lsusb -t
-	/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=ci_hdrc/1p, 480M
-	    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=usb-storage, 480M
-

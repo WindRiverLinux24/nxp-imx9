@@ -30,7 +30,7 @@ WARN_TO_ERROR_QA = "already-stripped compile-host-path install-host-path \
 WARN_QA:remove = "${WARN_TO_ERROR_QA}"
 ERROR_QA:append = " ${WARN_TO_ERROR_QA}"
 
-IMAGE_INSTALL:append = "  weston weston-init imx-pxp-g2d imx-g2d-samples weston-xwayland mesa-demos"
+IMAGE_INSTALL:append = "  weston weston-init imx-pxp-g2d imx-g2d-samples weston-xwayland mesa-demos gstreamer1.0 gstreamer1.0-plugins-good gstreamer1.0-plugins-bad imx-gst1.0-plugin"
 
 PREFERRED_VERSION_weston:mx93-nxp-bsp = "12.0.3.imx"
 PREFERRED_PROVIDER_virtual/libg2d:mx93-nxp-bsp ?= "imx-pxp-g2d"
@@ -45,8 +45,46 @@ CUSTOMER_RECIPES:freescale-layer += 'xwayland'
 CUSTOMER_RECIPES:fsl-bsp-release += 'linux-imx-headers'
 CUSTOMER_RECIPES:fsl-bsp-release += 'wayland-protocols'
 CUSTOMER_RECIPES:fsl-bsp-release += 'libdrm'
+CUSTOMER_RECIPES:fsl-bsp-release += 'gstreamer1.0'
+CUSTOMER_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-base'
+CUSTOMER_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-good'
+CUSTOMER_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-bad'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gst1.0-plugin'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-parser'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-codec'
+CUSTOMER_RECIPES:freescale-layer += 'imx-lib'
+PREFERRED_VERSION_gstreamer1.0-plugins-base:mx93-nxp-bsp = "1.22.5.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx93-nxp-bsp  = "1.22.5.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good:mx93-nxp-bsp = "1.22.5.imx"
+PREFERRED_VERSION_gstreamer1.0:mx93-nxp-bsp = "1.22.5.imx"
 
 <2> startup we will find that weston starts under g2d acceleration
+
+2.1.1 Gstreamer plug-in for PXP
+-------------------------------
+
+<1> Composition
+
+	gst-launch-1.0 -v imxcompositor_pxp name=comp sink_0::xpos=0 sink_0::ypos=0 sink_0::width=1280 sink_0::height=800 ! waylandsink videotestsrc ! comp.sink_0
+
+<2> Color conversion
+
+	gst-launch-1.0 videotestsrc ! video/x-raw, format=I420, width=640, height=480 ! imxvideoconvert_pxp ! queue ! waylandsink
+
+<3> Scaling
+
+	gst-launch-1.0 videotestsrc ! video/x-raw,width=1280,height=720 ! imxvideoconvert_pxp ! video/x-raw, width=1920, height=1080 ! waylandsink
+
+<4> Rotation
+
+	gst-launch-1.0 videotestsrc ! video/x-raw,format=NV16 ! imxvideoconvert_pxp rotation=4 ! fpsdisplaysink
+
+<5> Alpha blending
+
+	gst-launch-1.0 -v imxcompositor_pxp background=0x00000000 name=comp sink_0::alpha=0.8 \
+	sink_1::alpha=0.4 sink_0::xpos=0 sink_0::ypos=0 sink_0::width=320 sink_0::height=240 \
+	sink_1::xpos=120 sink_1::ypos=160 sink_1::width=480 sink_1::height=320 ! waylandsink videotestsrc ! \
+	comp.sink_0 videotestsrc ! comp.sink_1
 
 2.2 NPU & M33
 -------------

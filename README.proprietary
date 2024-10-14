@@ -32,7 +32,7 @@ ERROR_QA:append = " ${WARN_TO_ERROR_QA}"
 
 IMAGE_INSTALL:append = "  weston weston-init imx-pxp-g2d imx-g2d-samples weston-xwayland mesa-demos gstreamer1.0 gstreamer1.0-plugins-good gstreamer1.0-plugins-bad imx-gst1.0-plugin"
 
-PREFERRED_VERSION_weston:mx93-nxp-bsp = "12.0.3.imx"
+PREFERRED_VERSION_weston:mx93-nxp-bsp = "12.0.4.imx"
 PREFERRED_PROVIDER_virtual/libg2d:mx93-nxp-bsp ?= "imx-pxp-g2d"
 PREFERRED_VERSION_libdrm:mx93-nxp-bsp = "2.4.116.imx"
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-g2d-samples'
@@ -53,10 +53,12 @@ CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gst1.0-plugin'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-parser'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-codec'
 CUSTOMER_RECIPES:freescale-layer += 'imx-lib'
-PREFERRED_VERSION_gstreamer1.0-plugins-base:mx93-nxp-bsp = "1.22.5.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx93-nxp-bsp  = "1.22.5.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-good:mx93-nxp-bsp = "1.22.5.imx"
-PREFERRED_VERSION_gstreamer1.0:mx93-nxp-bsp = "1.22.5.imx"
+CUSTOMER_RECIPES:openembedded-layer += 'opencl-icd-loader'
+CUSTOMER_RECIPES:openembedded-layer += 'opencl-headers'
+PREFERRED_VERSION_gstreamer1.0-plugins-base:mx93-nxp-bsp = "1.24.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx93-nxp-bsp  = "1.24.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good:mx93-nxp-bsp = "1.24.0.imx"
+PREFERRED_VERSION_gstreamer1.0:mx93-nxp-bsp = "1.24.0.imx"
 
 <2> startup we will find that weston starts under g2d acceleration
 
@@ -105,7 +107,7 @@ CUSTOMER_RECIPES:imx-machine-learning += 'flatbuffers'
 CUSTOMER_RECIPES:imx-machine-learning += 'python3-flatbuffers'
 PREFERRED_VERSION_flatbuffers:mx93-nxp-bsp = "23.5.26"
 PREFERRED_VERSION_python3-flatbuffers:mx93-nxp-bsp = "23.5.26"
-PREFERRED_VERSION_tensorflow-lite:mx93-nxp-bsp = "2.14.0"
+PREFERRED_VERSION_tensorflow-lite:mx93-nxp-bsp = "2.16.2"
 
 IMAGE_INSTALL:append = " ethos-u-firmware ethos-u-driver-stack ethos-u-vela eiq-examples tensorflow-lite-ethosu-delegate python3-setuptools"
 

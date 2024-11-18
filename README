@@ -108,7 +108,7 @@ features, sub-boards and accessory used to extend features. Detailed list as bel
 	tftp $fdt_addr imx93-11x11-evk-boe-wxga-lvds-panel.dtb
 
 	If user wants to enable lpspi master:
-	tftp $fdt_addr imx93-11x11-evk-lpspi.dtb
+	tftp $fdt_addr imx93-11x11-evk-i2c-spi-slave.dtb
 
 	If user wants to enable i3c:
 	tftp $fdt_addr imx93-11x11-evk-i3c.dtb

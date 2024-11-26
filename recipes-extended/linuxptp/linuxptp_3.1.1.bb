@@ -31,3 +31,6 @@ PACKAGES =+ "${PN}-configs"
 
 FILES:${PN}-configs = "${docdir}"
 FILES:${PN}-doc = "${mandir}"
+
+# The lower version is for nxp-imx9 only
+COMPATIBLE_MACHINE = "nxp-imx9"

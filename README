@@ -514,7 +514,7 @@ imx93:
  sched-entry S 2 100000 \
  sched-entry S 4 100000 flags 2
 
-<5> Capture the streams on imx8mp:
+<5> Capture the streams on another imx93:
  tcpdump -i end1 -e -n -t -xx -c 3000 -w tsn.pcap
 
 <6> Send two streams into queue 1 and queue 2 on imx93:

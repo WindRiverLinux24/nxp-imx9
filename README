@@ -544,6 +544,12 @@ imx93(1) can see:
 imx93(2) can see:
     imx-dwmac 30bf0000.ethernet end1: FPE: Verify mPacket is received
 
+5.12 EdgeLock Secure Enclave
+----------------------------
+
+systemctl start nvm_daemon.service
+ele_hsm_test
+
 6. kexec/kdump
 ==============
 

@@ -72,7 +72,7 @@ The following BSP features are validated and supported.
 	+ RTC: On-Chip secure real time clock
 	+ Thermal: Thermal Management Unit (TMU)
 	+ EDMA: On-Chip Enhanced direct memory access controller
-	+ SEC Engine: CAAM crypto driver
+	+ EdgeLock Secure Enclave
 
 
 3.2 Unsupported Features
